@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	u "github.com/arunpyasi/wcqr-server/app/utils"
+	"github.com/jinzhu/gorm"
 )
 
 type Attendee struct {
@@ -25,20 +26,29 @@ func (attendee *Attendee) Create() map[string]interface{} {
 
 func GetAttendee(id int) *Attendee {
 	attendee := &Attendee{}
-	GetDB().Model(&attendee).Where("id=?", id).First(attendee)
+	if err := GetDB().Model(&attendee).Where("id=?", id).First(attendee).Error; err != nil {
+		fmt.Println(err)
+		if gorm.IsRecordNotFoundError(err) {
+			return nil
+		}
+	}
 	return attendee
 }
 
 func GetAttendees() []*Attendee {
 	attendees := []*Attendee{}
-	GetDB().Find(&attendees)
-	fmt.Println(attendees)
+	if err := GetDB().Find(&attendees).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil
+		}
+	}
 	return attendees
 
 }
 func (attendee *Attendee) Update(id int) *Attendee {
-	GetDB().Model(&attendee).Where("id=?", id).Updates(attendee)
-	fmt.Println(attendee)
+	if err := GetDB().Model(&attendee).Where("id=?", id).Updates(attendee).Error; err != nil {
+		fmt.Println(err)
+	}
 	attendee = GetAttendee(id)
 	return attendee
 }

@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -26,6 +27,7 @@ func addNewAttendee(w http.ResponseWriter, r *http.Request) {
 		u.Respond(w, u.Message(false, "Error while decoding request body"))
 		return
 	}
+	fmt.Println(attendee)
 	resp := attendee.Create()
 	u.Respond(w, resp)
 }
@@ -49,8 +51,16 @@ func updateAttendee(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := attendee.Update(ID)
-	resp := u.Message(true, "success")
-	resp["data"] = data
+	resp := u.Message(false, "")
+	existing_data := models.GetAttendee(ID)
+	if existing_data.AttendedAfterparty == true || existing_data.AttendedEvent == true {
+		resp = u.Message(false, "duplicate entry")
+		data := existing_data
+		resp["data"] = data
+	} else {
+		resp = u.Message(true, "success")
+		data := attendee.Update(ID)
+		resp["data"] = data
+	}
 	u.Respond(w, resp)
 }
