@@ -52,15 +52,29 @@ func updateAttendee(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := u.Message(false, "")
-	existing_data := models.GetAttendee(ID)
-	if existing_data.AttendedAfterparty == true || existing_data.AttendedEvent == true {
-		resp = u.Message(false, "duplicate entry")
-		data := existing_data
-		resp["data"] = data
+	existingData := models.GetAttendee(ID)
+
+	if attendee.AttendedEvent == true && attendee.AttendedAfterparty == false {
+		if existingData.AttendedEvent == true {
+			resp = u.Message(false, "duplicate entry")
+			data := existingData
+			resp["data"] = data
+		} else {
+			resp = u.Message(true, "success")
+			data := attendee.Update(ID)
+			resp["data"] = data
+		}
 	} else {
-		resp = u.Message(true, "success")
-		data := attendee.Update(ID)
-		resp["data"] = data
+		if existingData.AttendedAfterparty == true {
+			resp = u.Message(false, "duplicate entry")
+			data := existingData
+			resp["data"] = data
+		} else {
+			resp = u.Message(true, "success")
+			data := attendee.Update(ID)
+			resp["data"] = data
+		}
 	}
+
 	u.Respond(w, resp)
 }
