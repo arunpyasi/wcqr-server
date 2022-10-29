@@ -1,6 +1,6 @@
 package main
 
-import "github.com/arunpyasi/wcqr-server/app"
+import "github.com/openarun/wcqr-server/app"
 
 func main() {
 	app.Run()

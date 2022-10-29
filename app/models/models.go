@@ -3,7 +3,7 @@ package models
 import (
 	"fmt"
 
-	u "github.com/arunpyasi/wcqr-server/app/utils"
+	u "github.com/openarun/wcqr-server/app/utils"
 	"github.com/jinzhu/gorm"
 )
 

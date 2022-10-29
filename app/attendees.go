@@ -8,8 +8,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/arunpyasi/wcqr-server/app/models"
-	u "github.com/arunpyasi/wcqr-server/app/utils"
+	"github.com/openarun/wcqr-server/app/models"
+	u "github.com/openarun/wcqr-server/app/utils"
 )
 
 func getAttendees(w http.ResponseWriter, r *http.Request) {
